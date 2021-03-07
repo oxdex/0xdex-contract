@@ -12,7 +12,7 @@ chai.use(solidity)
 
 const TEST_ADDRESSES: [string, string] = [
   '0x1000000000000000000000000000000000000000',
-  '0x2000000000000000000000000000000000000000'
+  '0x2000000000000000000000000000000000000000',
 ]
 
 describe('OxDexFactory', () => {
@@ -20,8 +20,8 @@ describe('OxDexFactory', () => {
     ganacheOptions: {
       hardfork: 'istanbul',
       mnemonic: 'horn horn horn horn horn horn horn horn horn horn horn horn',
-      gasLimit: 9999999
-    }
+      gasLimit: 9999999,
+    },
   })
   const [wallet, other] = provider.getWallets()
   const loadFixture = createFixtureLoader([wallet, other], provider)

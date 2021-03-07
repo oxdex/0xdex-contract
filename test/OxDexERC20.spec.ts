@@ -3,7 +3,6 @@ import { utils as ethutils, constants as ethconst, Contract, BigNumber } from 'e
 import { solidity, MockProvider, deployContract } from 'ethereum-waffle'
 import { ecsign } from 'ethereumjs-util'
 
-
 import { expandTo18Decimals, getApprovalDigest } from './shared/utilities'
 import ERC20 from '../build/ERC20.json'
 
@@ -18,8 +17,8 @@ describe('OxDexERC20', () => {
     ganacheOptions: {
       hardfork: 'istanbul',
       mnemonic: 'horn horn horn horn horn horn horn horn horn horn horn horn',
-      gasLimit: 9999999
-    }
+      gasLimit: 9999999,
+    },
   })
 
   const [wallet, other] = provider.getWallets()
@@ -47,7 +46,7 @@ describe('OxDexERC20', () => {
             keccak256(toUtf8Bytes(name)),
             keccak256(toUtf8Bytes('1')),
             1,
-            token.address
+            token.address,
           ]
         )
       )

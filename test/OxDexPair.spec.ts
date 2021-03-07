@@ -11,7 +11,7 @@ const MINIMUM_LIQUIDITY = BigNumber.from(10).pow(3)
 chai.use(solidity)
 
 const overrides = {
-  gasLimit: 9999999
+  gasLimit: 9999999,
 }
 
 describe('OxDexPair', () => {
@@ -19,8 +19,8 @@ describe('OxDexPair', () => {
     ganacheOptions: {
       hardfork: 'istanbul',
       mnemonic: 'horn horn horn horn horn horn horn horn horn horn horn horn',
-      gasLimit: 9999999
-    }
+      gasLimit: 9999999,
+    },
   })
   const [wallet, other] = provider.getWallets()
   const loadFixture = createFixtureLoader([wallet], provider)
@@ -77,8 +77,8 @@ describe('OxDexPair', () => {
 
     [1, 10, 10, '906610893880149131'],
     [1, 100, 100, '987158034397061298'],
-    [1, 1000, 1000, '996006981039903216']
-  ].map(a => a.map(n => (typeof n === 'string' ? BigNumber.from(n) : expandTo18Decimals(n))))
+    [1, 1000, 1000, '996006981039903216'],
+  ].map((a) => a.map((n) => (typeof n === 'string' ? BigNumber.from(n) : expandTo18Decimals(n))))
   swapTestCases.forEach((swapTestCase, i) => {
     it(`getInputPrice:${i}`, async () => {
       const [swapAmount, token0Amount, token1Amount, expectedOutputAmount] = swapTestCase
@@ -95,8 +95,8 @@ describe('OxDexPair', () => {
     ['997000000000000000', 5, 10, 1], // given amountIn, amountOut = floor(amountIn * .997)
     ['997000000000000000', 10, 5, 1],
     ['997000000000000000', 5, 5, 1],
-    [1, 5, 5, '1003009027081243732'] // given amountOut, amountIn = ceiling(amountOut / .997)
-  ].map(a => a.map(n => (typeof n === 'string' ? BigNumber.from(n) : expandTo18Decimals(n))))
+    [1, 5, 5, '1003009027081243732'], // given amountOut, amountIn = ceiling(amountOut / .997)
+  ].map((a) => a.map((n) => (typeof n === 'string' ? BigNumber.from(n) : expandTo18Decimals(n))))
   optimisticTestCases.forEach((optimisticTestCase, i) => {
     it(`optimistic:${i}`, async () => {
       const [outputAmount, token0Amount, token1Amount, inputAmount] = optimisticTestCase
