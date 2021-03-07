@@ -28,13 +28,21 @@ async function main() {
   const provider = new providers.JsonRpcProvider(enpoint)
   const signer = Wallet.fromMnemonic(mnemonic).connect(provider)
 
+  const signerNonce = await signer.getTransactionCount()
+  if (signerNonce != 0) {
+    throw new Error('OxDexFactory should be deployed with a fresh account')
+  }
+
+  const signerBalance = await signer.getBalance()
+  if (signerBalance.lt(BigNumber.from('200000000000000000'))) {
+    throw new Error('insufficient funds for deploying')
+  }
+
   const { chainId } = await provider.getNetwork()
   await deployComfirm(chainId, signer.address)
 
   console.log('deploying...')
-  const factory = await deployContract(signer, OxDexFactory, [signer.address], {
-    gasPrice: BigNumber.from(1e9),
-  })
+  const factory = await deployContract(signer, OxDexFactory, [signer.address])
   await factory.deployed()
   console.log('deployed at', factory.address)
 }
