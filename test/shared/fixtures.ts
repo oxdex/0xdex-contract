@@ -35,7 +35,7 @@ export async function pairFixture([wallet]: Wallet[], provider: providers.Web3Pr
 
   await factory.createPair(tokenA.address, tokenB.address, overrides)
   const pairAddress = await factory.getPair(tokenA.address, tokenB.address)
-  const pair = new Contract(pairAddress, JSON.stringify(OxDexPair.abi), provider).connect(wallet)
+  const pair = new Contract(pairAddress, OxDexPair.abi, provider).connect(wallet)
 
   const token0Address = (await pair.token0()).address
   const token0 = tokenA.address === token0Address ? tokenA : tokenB
