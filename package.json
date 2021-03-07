@@ -1,7 +1,7 @@
 {
   "name": "oxdex-contract",
   "description": "contracts for the OxDex protocol",
-  "version": "v0.0.1-beta.2",
+  "version": "v0.0.1-beta.3",
   "homepage": "https://www.oxdex.org",
   "repository": {
     "type": "git",
