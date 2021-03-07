@@ -13,10 +13,10 @@ interface FactoryFixture {
 }
 
 const overrides = {
-  gasLimit: 9999999
+  gasLimit: 9999999,
 }
 
-export async function factoryFixture([wallet]: Wallet[], _: providers.Web3Provider,): Promise<FactoryFixture> {
+export async function factoryFixture([wallet]: Wallet[], _: providers.Web3Provider): Promise<FactoryFixture> {
   const factory = await deployContract(wallet, OxDexFactory, [wallet.address], overrides)
   return { factory }
 }
@@ -27,7 +27,7 @@ interface PairFixture extends FactoryFixture {
   pair: Contract
 }
 
-export async function pairFixture([wallet]: Wallet[], provider: providers.Web3Provider,): Promise<PairFixture> {
+export async function pairFixture([wallet]: Wallet[], provider: providers.Web3Provider): Promise<PairFixture> {
   const { factory } = await factoryFixture([wallet], provider)
 
   const tokenA = await deployContract(wallet, ERC20, [expandTo18Decimals(10000)], overrides)

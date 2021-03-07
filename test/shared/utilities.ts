@@ -1,11 +1,6 @@
 import { providers, utils as ethtuils, Contract, BigNumber } from 'ethers'
 
-const {
-  getAddress,
-  keccak256,
-  defaultAbiCoder,
-  toUtf8Bytes,
-  solidityPack } = ethtuils
+const { getAddress, keccak256, defaultAbiCoder, toUtf8Bytes, solidityPack } = ethtuils
 
 const PERMIT_TYPEHASH = keccak256(
   toUtf8Bytes('Permit(address owner,address spender,uint256 value,uint256 nonce,uint256 deadline)')
@@ -24,7 +19,7 @@ function getDomainSeparator(name: string, tokenAddress: string) {
         keccak256(toUtf8Bytes(name)),
         keccak256(toUtf8Bytes('1')),
         1,
-        tokenAddress
+        tokenAddress,
       ]
     )
   )
@@ -40,9 +35,9 @@ export function getCreate2Address(
     '0xff',
     factoryAddress,
     keccak256(solidityPack(['address', 'address'], [token0, token1])),
-    keccak256(bytecode)
+    keccak256(bytecode),
   ]
-  const sanitizedInputs = `0x${create2Inputs.map(i => i.slice(2)).join('')}`
+  const sanitizedInputs = `0x${create2Inputs.map((i) => i.slice(2)).join('')}`
   return getAddress(`0x${keccak256(sanitizedInputs).slice(-40)}`)
 }
 
@@ -70,16 +65,19 @@ export async function getApprovalDigest(
             ['bytes32', 'address', 'address', 'uint256', 'uint256', 'uint256'],
             [PERMIT_TYPEHASH, approve.owner, approve.spender, approve.value, nonce, deadline]
           )
-        )
+        ),
       ]
     )
   )
 }
 
 export function mineBlock(provider: providers.Web3Provider, timestamp: number): Promise<void> {
-  return provider.send("evm_mine", [timestamp])
+  return provider.send('evm_mine', [timestamp])
 }
 
 export function encodePrice(reserve0: BigNumber, reserve1: BigNumber) {
-  return [reserve1.mul(BigNumber.from(2).pow(112)).div(reserve0), reserve0.mul(BigNumber.from(2).pow(112)).div(reserve1)]
+  return [
+    reserve1.mul(BigNumber.from(2).pow(112)).div(reserve0),
+    reserve0.mul(BigNumber.from(2).pow(112)).div(reserve1),
+  ]
 }
