@@ -5,6 +5,8 @@ import { BigNumber, constants as ethconst } from 'ethers'
 
 import { expandTo18Decimals, mineBlock, encodePrice } from './shared/utilities'
 import { pairFixture } from './shared/fixtures'
+import OxDexPair from '../build/OxDexPair.json'
+import { keccak256 } from 'ethereumjs-util'
 
 const MINIMUM_LIQUIDITY = BigNumber.from(10).pow(3)
 
@@ -35,6 +37,11 @@ describe('OxDexPair', () => {
     token0 = fixture.token0
     token1 = fixture.token1
     pair = fixture.pair
+  })
+
+  it('code hash', () => {
+    const codehash = keccak256(Buffer.from(OxDexPair.bytecode, 'hex')).toString('hex')
+    expect(codehash).to.eq('7c13b56982c8deafb0314c12f7517e80f6eefe2089bd312f813cc0ae8b371f7a')
   })
 
   it('mint', async () => {
