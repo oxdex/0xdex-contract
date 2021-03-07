@@ -1,25 +1,27 @@
 import chai, { expect } from 'chai'
-import { Contract } from 'ethers'
-import { MaxUint256 } from 'ethers/constants'
-import { bigNumberify, hexlify, keccak256, defaultAbiCoder, toUtf8Bytes } from 'ethers/utils'
+import { utils as ethutils, constants as ethconst, Contract, BigNumber } from 'ethers'
 import { solidity, MockProvider, deployContract } from 'ethereum-waffle'
 import { ecsign } from 'ethereumjs-util'
 
-import { expandTo18Decimals, getApprovalDigest } from './shared/utilities'
 
+import { expandTo18Decimals, getApprovalDigest } from './shared/utilities'
 import ERC20 from '../build/ERC20.json'
 
 chai.use(solidity)
 
 const TOTAL_SUPPLY = expandTo18Decimals(10000)
 const TEST_AMOUNT = expandTo18Decimals(10)
+const { hexlify, keccak256, defaultAbiCoder, toUtf8Bytes } = ethutils
 
 describe('OxDexERC20', () => {
   const provider = new MockProvider({
-    hardfork: 'istanbul',
-    mnemonic: 'horn horn horn horn horn horn horn horn horn horn horn horn',
-    gasLimit: 9999999
+    ganacheOptions: {
+      hardfork: 'istanbul',
+      mnemonic: 'horn horn horn horn horn horn horn horn horn horn horn horn',
+      gasLimit: 9999999
+    }
   })
+
   const [wallet, other] = provider.getWallets()
 
   let token: Contract
@@ -86,18 +88,18 @@ describe('OxDexERC20', () => {
   })
 
   it('transferFrom:max', async () => {
-    await token.approve(other.address, MaxUint256)
+    await token.approve(other.address, ethconst.MaxUint256)
     await expect(token.connect(other).transferFrom(wallet.address, other.address, TEST_AMOUNT))
       .to.emit(token, 'Transfer')
       .withArgs(wallet.address, other.address, TEST_AMOUNT)
-    expect(await token.allowance(wallet.address, other.address)).to.eq(MaxUint256)
+    expect(await token.allowance(wallet.address, other.address)).to.eq(ethconst.MaxUint256)
     expect(await token.balanceOf(wallet.address)).to.eq(TOTAL_SUPPLY.sub(TEST_AMOUNT))
     expect(await token.balanceOf(other.address)).to.eq(TEST_AMOUNT)
   })
 
   it('permit', async () => {
     const nonce = await token.nonces(wallet.address)
-    const deadline = MaxUint256
+    const deadline = ethconst.MaxUint256
     const digest = await getApprovalDigest(
       token,
       { owner: wallet.address, spender: other.address, value: TEST_AMOUNT },
@@ -111,6 +113,6 @@ describe('OxDexERC20', () => {
       .to.emit(token, 'Approval')
       .withArgs(wallet.address, other.address, TEST_AMOUNT)
     expect(await token.allowance(wallet.address, other.address)).to.eq(TEST_AMOUNT)
-    expect(await token.nonces(wallet.address)).to.eq(bigNumberify(1))
+    expect(await token.nonces(wallet.address)).to.eq(BigNumber.from(1))
   })
 })
